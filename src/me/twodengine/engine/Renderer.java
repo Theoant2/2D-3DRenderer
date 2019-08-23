@@ -28,6 +28,10 @@ public class Renderer {
 	{
 		this.strokeColor = c;
 	}
+	public void stroke(int rgb)
+	{
+		this.strokeColor = new Color(rgb);
+	}
 
 	public void line(float x1, float y1, float x2, float y2)
 	{

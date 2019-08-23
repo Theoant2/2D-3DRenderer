@@ -56,7 +56,7 @@ public class Point3D implements Renderable {
 
 	  public void render(Renderer renderer2D, Camera camera, float offsetX, float offsetY)
 	  {
-	    System.out.println("Utiliser compute(double offsetX, double offsetY)");
+	    System.out.println("Utiliser: public Point compute(double offsetX, double offsetY)");
 	  }
 
 	  public Point compute(Camera camera, float offsetX, float offsetY)

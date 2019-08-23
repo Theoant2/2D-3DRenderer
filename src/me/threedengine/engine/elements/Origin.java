@@ -5,7 +5,7 @@ import java.awt.Color;
 import me.threedengine.engine.Camera;
 import me.twodengine.engine.Renderer;
 
-public class Origin implements Renderable {
+public class Origin implements Renderable<Origin> {
 
 	private Renderer renderer2D;
 	private Point3D origin, abs, ord, prof;

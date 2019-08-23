@@ -2,6 +2,8 @@ package me.threedengine.engine.elements;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.stream.IntStream;
 
 import me.threedengine.engine.Camera;
@@ -10,13 +12,17 @@ import me.twodengine.engine.Renderer;
 
 public class Model implements Renderable {
 
-	private Renderer renderer2D;
+	protected Renderer renderer2D;
+	protected ArrayList<Point3D> points;
+	protected Point[] points2D;
+	protected ArrayList<Integer[]> faces;
 	private String name;
-	private ArrayList<Point3D> points;
-	private Point[] points2D;
-	private ArrayList<Integer[]> faces;
 	private boolean centering = false;
 	private Vector2D centeringV = new Vector2D(0, 0);
+	
+	protected float minX, maxX,
+				  minY, maxY,
+				  minZ, maxZ;
 
 	public Model(String name, ArrayList<Point3D> points, ArrayList<Integer[]> faces)
 	{
@@ -24,6 +30,13 @@ public class Model implements Renderable {
 		this.points = points;
 		this.faces = faces;
 		this.points2D = new Point[this.points.size()];
+		
+		this.minX = this.getMinX();
+		this.maxX = this.getMaxX();
+		this.minY = this.getMinY();
+		this.maxY = this.getMaxY();
+		this.minZ = this.getMinZ();
+		this.maxZ = this.getMaxZ();
 	}
 
 	public void render(Renderer renderer2D, Camera camera, float offsetX, float offsetY)
@@ -67,7 +80,7 @@ public class Model implements Renderable {
 	}
 
 
-	private void connect(Integer ... face)
+	protected void connect(Integer ... face)
 	{
 		this.renderer2D.stroke(new Color(0));
 		for (int i = 0; i < face.length - 1; i++) {
@@ -78,5 +91,32 @@ public class Model implements Renderable {
 
 	public void setCentering(boolean centering) {
 		this.centering = centering;
+	}
+	
+	private float getMaxX()
+	{
+		return Collections.max(this.points, Comparator.comparing(point -> point.getY())).getX();
+	}
+	private float getMinX()
+	{
+		return Collections.min(this.points, Comparator.comparing(point -> point.getY())).getX();
+	}
+	
+	private float getMaxY()
+	{
+		return Collections.max(this.points, Comparator.comparing(point -> point.getY())).getY();
+	}
+	private float getMinY()
+	{
+		return Collections.min(this.points, Comparator.comparing(point -> point.getY())).getY();
+	}
+	
+	private float getMaxZ()
+	{
+		return Collections.max(this.points, Comparator.comparing(point -> point.getY())).getZ();
+	}
+	private float getMinZ()
+	{
+		return Collections.min(this.points, Comparator.comparing(point -> point.getY())).getZ();
 	}
 }

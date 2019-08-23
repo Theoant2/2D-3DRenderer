@@ -10,6 +10,7 @@ import me.twodengine.engine.WindowContainer;
 public class Main {
 
 	private static Model model;
+	private static NoisedLandscape landscape;
 	
 	public static void main(String[] args)
 	{
@@ -18,9 +19,9 @@ public class Main {
 		System.out.println(wc.getRenderer());
 		Renderer3D renderer3D = new Renderer3D(wc.getRenderer(), wc.getWidth() / 2, wc.getHeight() / 2);
 		//model = new Loader("C:\\Users\\Utilisateur\\Documents\\Processing\\Own3D\\lowpolyhouse\\low-poly-mill.obj", renderer3D.getCamera()).computeModel();
-		model = NoisedLandscape.generate(renderer3D.getCamera(), 100, 100);
+		landscape = NoisedLandscape.generate(renderer3D.getCamera(), 100, 100, NoisedLandscape.DetailedLevel.SQUARE);
 		renderer3D.drawOrigin();
-		renderer3D.addElement(model);
+		renderer3D.addElement(landscape);
 		//renderer3D.rotate((float) Math.PI, 0f, 0f);
 		renderer3D.rotate((float) Math.PI, 0f, 0f);
 		renderer3D.rotate(-0.5f, 0f, 0f);

@@ -87,4 +87,5 @@ public class Cube implements Renderable {
 		this.renderer2D.line(this.points2D[2].getX(), this.points2D[2].getY(), this.points2D[6].getX(), this.points2D[6].getY());
 		this.renderer2D.line(this.points2D[3].getX(), this.points2D[3].getY(), this.points2D[7].getX(), this.points2D[7].getY());
 	}
+
 }
