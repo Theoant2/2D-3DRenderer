@@ -35,17 +35,22 @@ public class Renderer {
 
 	public void line(float x1, float y1, float x2, float y2)
 	{
-		final double x_ = x2 - x1;
-		final double y_ = y2 - y1;
-		final double hyp = Math.hypot(x_, y_);
-		int x, y;
-		for(int i = 0; i < hyp; i++)
+		final float x_ = x2 - x1;
+		final float y_ = y2 - y1;
+		float n = 0;
+		if (Math.abs(x_) > Math.abs(y_))
+			n = (float) Math.abs(x_);
+		else
+			n = (float) Math.abs(y_);
+		final float Xincrement = x_ / n;
+		final float Yincrement = y_ / n;
+		for(int i = 0; i < n; i++)
 		{
-			x = (int) Math.floor(x1 + i * (x_ / hyp));
-			y = (int) Math.floor(y1 + i * (y_ / hyp));
-			if(x + y * this.pW < this.pixels.length && x + y * this.pW >= 0)
-				this.pixels[x + y * this.pW] = this.strokeColor.getRGB();
+			x1 += Xincrement;
+			y1 += Yincrement;
+			this.pixels[Math.round(x1) + Math.round(y1) * this.pW] = this.strokeColor.getRGB();
 		}
+		
 	}
 
 	public int getWidth() {

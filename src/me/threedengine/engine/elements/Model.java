@@ -19,10 +19,10 @@ public class Model implements Renderable {
 	private String name;
 	private boolean centering = false;
 	private Vector2D centeringV = new Vector2D(0, 0);
-	
+
 	protected float minX, maxX,
-				  minY, maxY,
-				  minZ, maxZ;
+	minY, maxY,
+	minZ, maxZ;
 
 	public Model(String name, ArrayList<Point3D> points, ArrayList<Integer[]> faces)
 	{
@@ -30,13 +30,15 @@ public class Model implements Renderable {
 		this.points = points;
 		this.faces = faces;
 		this.points2D = new Point[this.points.size()];
-		
-		this.minX = this.getMinX();
-		this.maxX = this.getMaxX();
-		this.minY = this.getMinY();
-		this.maxY = this.getMaxY();
-		this.minZ = this.getMinZ();
-		this.maxZ = this.getMaxZ();
+
+		try {
+			this.minX = this.getMinX();
+			this.maxX = this.getMaxX();
+			this.minY = this.getMinY();
+			this.maxY = this.getMaxY();
+			this.minZ = this.getMinZ();
+			this.maxZ = this.getMaxZ();
+		} catch(Exception e) {}
 	}
 
 	public void render(Renderer renderer2D, Camera camera, float offsetX, float offsetY)
@@ -86,13 +88,17 @@ public class Model implements Renderable {
 		for (int i = 0; i < face.length - 1; i++) {
 			this.renderer2D.line(points2D[face[i]].getX(), points2D[face[i]].getY(), points2D[face[i + 1]].getX(), points2D[face[i + 1]].getY());
 		}
-		this.renderer2D.line(points2D[face[face.length - 1]].getX(), points2D[face[face.length - 1]].getY(), points2D[face[0]].getX(), points2D[face[0]].getY());
+		if(face.length != 2) this.renderer2D.line(points2D[face[face.length - 1]].getX(), points2D[face[face.length - 1]].getY(), points2D[face[0]].getX(), points2D[face[0]].getY());
 	}
 
 	public void setCentering(boolean centering) {
 		this.centering = centering;
 	}
-	
+
+	protected void addPoint(Point3D point) { this.points.add(point); }
+
+	protected void addFace(Integer[] face) { this.faces.add(face); }
+
 	private float getMaxX()
 	{
 		return Collections.max(this.points, Comparator.comparing(point -> point.getY())).getX();
@@ -101,7 +107,7 @@ public class Model implements Renderable {
 	{
 		return Collections.min(this.points, Comparator.comparing(point -> point.getY())).getX();
 	}
-	
+
 	private float getMaxY()
 	{
 		return Collections.max(this.points, Comparator.comparing(point -> point.getY())).getY();
@@ -110,7 +116,7 @@ public class Model implements Renderable {
 	{
 		return Collections.min(this.points, Comparator.comparing(point -> point.getY())).getY();
 	}
-	
+
 	private float getMaxZ()
 	{
 		return Collections.max(this.points, Comparator.comparing(point -> point.getY())).getZ();

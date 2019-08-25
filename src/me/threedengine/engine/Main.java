@@ -3,8 +3,8 @@ package me.threedengine.engine;
 import java.util.stream.IntStream;
 
 import me.threedengine.engine.elements.Model;
+import me.threedengine.engine.elements.NoisedLandscape;
 import me.threedengine.engine.utils.Loader;
-import me.threedengine.engine.utils.NoisedLandscape;
 import me.twodengine.engine.WindowContainer;
 
 public class Main {
@@ -28,11 +28,18 @@ public class Main {
 		renderer3D.translate(-100f, -10f, -100f);
 		renderer3D.scale(2.5f);
 		//renderer3D.createCube(-15, -15, -15, 30);
+		//renderer3D.createSphere(-15, -15, -15, 30);
 		wc.on(WindowContainer.RENDER_EVENT, renderer -> {
 			renderer.clear();
 			renderer3D.render();
 			//renderer3D.rotate(0f, 0.01f, 0f);
-			renderer3D.getCamera().rotate(0f, 0.01f, 0f);
+			//renderer3D.translate(0f, 0f, 0f);
+			//renderer3D.getCamera().translate(0f, 0f, 0f);
+			
+		});
+		wc.on(WindowContainer.UPDATE_EVENT, renderer -> {
+			renderer3D.getCamera().rotate(0f, 0.001f, 0f);
+			//renderer3D.rotate(0f, 0.001f, 0f);
 			//renderer3D.translate(0f, 0f, 0f);
 			//renderer3D.getCamera().translate(0f, 0f, 0f);
 			

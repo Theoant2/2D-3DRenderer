@@ -1,16 +1,15 @@
-package me.threedengine.engine.utils;
+package me.threedengine.engine.elements;
 
 import java.awt.Color;
 import java.util.ArrayList;
 
 import me.threedengine.engine.Camera;
-import me.threedengine.engine.elements.Model;
-import me.threedengine.engine.elements.Point3D;
+import me.threedengine.engine.utils.ImprovedNoise;
 
 public class NoisedLandscape extends Model {
 
-	public NoisedLandscape(String name, ArrayList<Point3D> points, ArrayList<Integer[]> faces) {
-		super(name, points, faces);
+	public NoisedLandscape(ArrayList<Point3D> points, ArrayList<Integer[]> faces) {
+		super("Noised Landscape", points, faces);
 	}
 	
 	@Override
@@ -41,7 +40,7 @@ public class NoisedLandscape extends Model {
 		{
 			for(int x = 0; x < cols; x++)
 			{
-				points.add(new Point3D(camera, x * 2, (float) ImprovedNoise.noise(x * 0.1, y * 0.1, 0) * 6, y * 2));
+				points.add(new Point3D(camera, x * 2, (float) ImprovedNoise.noise(x * 0.1, y * 0.1, 0) * 10, y * 2));
 			}
 		}
 
@@ -81,6 +80,6 @@ public class NoisedLandscape extends Model {
 			}
 		}
 
-		return new NoisedLandscape("Noised Landscape", points, faces);
+		return new NoisedLandscape(points, faces);
 	}
 }

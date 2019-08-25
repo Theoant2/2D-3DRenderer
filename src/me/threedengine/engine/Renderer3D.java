@@ -6,7 +6,9 @@ import me.threedengine.engine.elements.Cube;
 import me.threedengine.engine.elements.Origin;
 import me.threedengine.engine.elements.Point3D;
 import me.threedengine.engine.elements.Renderable;
+import me.threedengine.engine.elements.Sphere;
 import me.threedengine.engine.utils.Loader;
+import me.threedengine.engine.utils.Vector3D;
 import me.twodengine.engine.Renderer;
 
 public class Renderer3D {
@@ -45,6 +47,12 @@ public class Renderer3D {
 	{
 		Cube cube = new Cube(this.camera, x, y, z, size);
 		this.elements.add(cube);
+		return this.elements.size();
+	}
+	public int createSphere(int x, int y, int z, int radius)
+	{
+		Sphere sphere = Sphere.generate(this.camera, new Vector3D(x, y, z), radius);
+		this.elements.add(sphere);
 		return this.elements.size();
 	}
 	public int createModel(String url)
