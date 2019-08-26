@@ -7,8 +7,8 @@ import me.threedengine.engine.utils.Vector3D;
 
 public class Sphere extends Model {
 
-	public Sphere(ArrayList<Point3D> points, ArrayList<Integer[]> faces) {
-		super("Sphere", points, faces);
+	public Sphere(Polygon[] polygons) {
+		super("Sphere", polygons);
 
 	}
 
@@ -38,7 +38,7 @@ public class Sphere extends Model {
 			}
 		}*/
 
-		return new Sphere(points, faces);
+		return new Sphere(Polygon.parsePolygons(camera, points, faces));
 	}
 
 }

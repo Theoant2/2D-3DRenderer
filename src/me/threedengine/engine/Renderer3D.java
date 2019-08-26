@@ -3,9 +3,11 @@ package me.threedengine.engine;
 import java.util.ArrayList;
 
 import me.threedengine.engine.elements.Cube;
+import me.threedengine.engine.elements.Drawable;
 import me.threedengine.engine.elements.Origin;
 import me.threedengine.engine.elements.Point3D;
 import me.threedengine.engine.elements.Renderable;
+import me.threedengine.engine.elements.Showable;
 import me.threedengine.engine.elements.Sphere;
 import me.threedengine.engine.utils.Loader;
 import me.threedengine.engine.utils.Vector3D;
@@ -99,6 +101,24 @@ public class Renderer3D {
 		for (int i = 0; i < this.elements.size(); i++)
 		{
 			this.elements.get(i).render(this.renderer2D, this.camera, this.offsetX, this.offsetY);
+		}
+	}
+	
+	public void connect()
+	{
+		for (int i = 0; i < this.elements.size(); i++)
+		{
+			if(this.elements.get(i) instanceof Showable)
+				((Showable) this.elements.get(i)).connect(this.renderer2D);
+		}
+	}
+	
+	public void draw()
+	{
+		for (int i = 0; i < this.elements.size(); i++)
+		{
+			if(this.elements.get(i) instanceof Drawable)
+				((Drawable) this.elements.get(i)).draw();
 		}
 	}
 

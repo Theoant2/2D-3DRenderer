@@ -8,6 +8,7 @@ import java.util.Scanner;
 import me.threedengine.engine.Camera;
 import me.threedengine.engine.elements.Model;
 import me.threedengine.engine.elements.Point3D;
+import me.threedengine.engine.elements.Polygon;
 
 public class Loader {
 
@@ -53,12 +54,12 @@ public class Loader {
 					}
 				}
 			}
-			return new Model("", points, faces);
+			return new Model("", Polygon.parsePolygons(this.camera, points, faces));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return new Model("Loading Error", new ArrayList<Point3D>(), new ArrayList<Integer[]>());
+		return new Model("Loading Error", new Polygon[0]);
 	}
 
 

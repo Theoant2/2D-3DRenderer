@@ -5,22 +5,30 @@ import java.util.ArrayList;
 
 import me.threedengine.engine.Camera;
 import me.threedengine.engine.utils.ImprovedNoise;
+import me.twodengine.engine.Renderer;
 
 public class NoisedLandscape extends Model {
 
-	public NoisedLandscape(ArrayList<Point3D> points, ArrayList<Integer[]> faces) {
-		super("Noised Landscape", points, faces);
+	public NoisedLandscape(Polygon[] polygons) {
+		super("Noised Landscape", polygons);
 	}
 	
 	@Override
-	protected void connect(Integer ... face)
+	public void connect(Renderer renderer2D)
 	{
-		super.renderer2D.stroke(new Color(0));
-		for (int i = 0; i < face.length - 1; i++) {
-			super.renderer2D.stroke(Color.HSBtoRGB(super.points.get(face[face.length - 1]).getY() / (super.maxY * 2f), 1, 1));
-			super.renderer2D.line(super.points2D[face[i]].getX(), super.points2D[face[i]].getY(), super.points2D[face[i + 1]].getX(), super.points2D[face[i + 1]].getY());
+		for(int i = 0; i < super.polygons.length; i++)
+		{
+			for(int j = 0; j < super.polygons[i].getPoints2D().length - 1; j++)
+			{
+				renderer2D.stroke(Color.HSBtoRGB(super.polygons[i].getPoints3D()[super.polygons[i].getPoints3D().length - 1].getY() / (super.maxY * 2f), 1, 1));
+				renderer2D.line(super.polygons[i].getPoints2D()[j].getX(), super.polygons[i].getPoints2D()[j].getY(),
+								super.polygons[i].getPoints2D()[j + 1].getX(), super.polygons[i].getPoints2D()[j + 1].getY());
+			}
+			renderer2D.line(super.polygons[i].getPoints2D()[super.polygons[i].getPoints2D().length - 1].getX(),
+							super.polygons[i].getPoints2D()[super.polygons[i].getPoints2D().length - 1].getY(),
+							super.polygons[i].getPoints2D()[0].getX(),
+							super.polygons[i].getPoints2D()[0].getY());
 		}
-		super.renderer2D.line(super.points2D[face[face.length - 1]].getX(), super.points2D[face[face.length - 1]].getY(), super.points2D[face[0]].getX(), super.points2D[face[0]].getY());
 	}
 
 	public static enum DetailedLevel {
@@ -68,7 +76,7 @@ public class NoisedLandscape extends Model {
 				}
 				case SQUARE:
 				{
-					faces.add(new Integer[]{x + y * cols, x + y * cols + 1, x + y * cols + cols, x + y * cols + cols + 1});
+					faces.add(new Integer[]{x + y * cols, x + y * cols + 1, x + y * cols + cols + 1, x + y * cols + cols});
 					break;
 				}
 				default:
@@ -80,6 +88,6 @@ public class NoisedLandscape extends Model {
 			}
 		}
 
-		return new NoisedLandscape(points, faces);
+		return new NoisedLandscape(Polygon.parsePolygons(camera, points, faces));
 	}
 }

@@ -4,6 +4,7 @@ import me.threedengine.engine.Camera;
 import me.threedengine.engine.utils.Matrices;
 import me.threedengine.engine.utils.Vector3D;
 import me.twodengine.engine.Renderer;
+import me.twodengine.engine.elements.Point;
 
 public class Point3D implements Renderable {
 

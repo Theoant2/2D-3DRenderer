@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import me.threedengine.engine.Camera;
 import me.twodengine.engine.Renderer;
+import me.twodengine.engine.elements.Point;
 
 public class Cube implements Renderable {
 

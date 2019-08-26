@@ -2,35 +2,38 @@ package me.threedengine.engine.elements;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.stream.IntStream;
 
 import me.threedengine.engine.Camera;
-import me.threedengine.engine.utils.Vector2D;
 import me.twodengine.engine.Renderer;
+import me.twodengine.engine.elements.Point;
+import me.twodengine.engine.elements.Vector2D;
 
-public class Model implements Renderable {
+public class Model implements Renderable, Drawable, Showable {
 
 	protected Renderer renderer2D;
-	protected ArrayList<Point3D> points;
-	protected Point[] points2D;
+	protected Polygon[] polygons;
 	protected ArrayList<Integer[]> faces;
 	private String name;
 	private boolean centering = false;
 	private Vector2D centeringV = new Vector2D(0, 0);
-
+	
 	protected float minX, maxX,
-	minY, maxY,
-	minZ, maxZ;
-
-	public Model(String name, ArrayList<Point3D> points, ArrayList<Integer[]> faces)
+					minY, maxY,
+					minZ, maxZ;
+	
+	// Changer le constructeur pour public Model(String name, ArrayList<Polygon> polygons)
+	// Pour eviter la conversion (Polygon.parsePolygons) à chaque frames
+	// Et se sera plus pratique pour le futur (i.e. Triangle extends Polygon)
+	
+	public Model(String name, Polygon[] polygons)
 	{
 		this.name = name;
-		this.points = points;
-		this.faces = faces;
-		this.points2D = new Point[this.points.size()];
-
+		this.polygons = polygons;
+		
 		try {
 			this.minX = this.getMinX();
 			this.maxX = this.getMaxX();
@@ -43,86 +46,72 @@ public class Model implements Renderable {
 
 	public void render(Renderer renderer2D, Camera camera, float offsetX, float offsetY)
 	{
-		if(this.centering)
-		{
-			float xmin = this.points.stream().min((first, second) -> Double.compare(first.getX(), second.getX())).get().getX();
-			float xmax = this.points.stream().max((first, second) -> Double.compare(first.getX(), second.getX())).get().getX();
-
-			float ymin = this.points.stream().min((first, second) -> Double.compare(first.getY(), second.getY())).get().getY();
-			float ymax = this.points.stream().max((first, second) -> Double.compare(first.getY(), second.getY())).get().getY();
-			this.centeringV = new Vector2D((xmax - xmin), (ymax - ymin));
-			this.centering = false;
-		}
 		this.renderer2D = renderer2D;
-		IntStream.range(0, this.points.size()).parallel().forEach(i -> {
+		/*IntStream.range(0, this.points.size()).parallel().forEach(i -> {
 			this.points2D[i] = this.points.get(i).projectPerspective2D(camera);
 			this.points2D[i].translate(offsetX - centeringV.getX(), offsetY - centeringV.getX());
-		});
-		/*for (int i = 0; i < this.points.size(); i++) {
-			this.points2D[i] = this.points.get(i).projectPerspective2D(camera);
-			this.points2D[i].translate(offsetX - centeringV.getX(), offsetY - centeringV.getX());
-		}*/
-		for (Integer[] face : this.faces) this.connect(face);
+		});*/
+		for (int i = 0; i < this.polygons.length; i++) {
+			this.polygons[i].render(renderer2D, camera, offsetX, offsetY);
+		}
 	}
 
 	public void translate(float x, float y, float z) 
 	{
 		//if(this.name == "Noised Landscape") System.out.println(this.points.get(0));
-		for (Point3D point : this.points) point.translate(x, y, z);
+		for (Polygon polygon : this.polygons) polygon.translate(x, y, z);
 		//if(this.name == "Noised Landscape") System.out.println(this.points.get(0));
 	}
 
 	public void rotate(float angleX, float angleY, float angleZ)
 	{
-		for (Point3D point : this.points) point.rotate(angleX, angleY, angleZ);
+		for (Polygon polygon : this.polygons) polygon.rotate(angleX, angleY, angleZ);
 	}
 	public void scale(float size)
 	{
-		for (Point3D point : this.points) point.scale(size);
+		for (Polygon polygon : this.polygons) polygon.scale(size);
 	}
 
 
-	protected void connect(Integer ... face)
+	public void connect(Renderer renderer2D)
 	{
-		this.renderer2D.stroke(new Color(0));
-		for (int i = 0; i < face.length - 1; i++) {
-			this.renderer2D.line(points2D[face[i]].getX(), points2D[face[i]].getY(), points2D[face[i + 1]].getX(), points2D[face[i + 1]].getY());
-		}
-		if(face.length != 2) this.renderer2D.line(points2D[face[face.length - 1]].getX(), points2D[face[face.length - 1]].getY(), points2D[face[0]].getX(), points2D[face[0]].getY());
+		for(int i = 0; i < this.polygons.length; i++)
+			this.polygons[i].connect(renderer2D);
+	}
+	
+	public void draw() {
+		System.out.println("dqdzqddqzd");
+		for(Polygon polygon : this.polygons) polygon.floodFill(this.renderer2D);
 	}
 
 	public void setCentering(boolean centering) {
 		this.centering = centering;
 	}
 
-	protected void addPoint(Point3D point) { this.points.add(point); }
-
-	protected void addFace(Integer[] face) { this.faces.add(face); }
-
-	private float getMaxX()
+	public float getMaxX()
 	{
-		return Collections.max(this.points, Comparator.comparing(point -> point.getY())).getX();
+		return Collections.max(new ArrayList<Polygon>(Arrays.asList(this.polygons)), Comparator.comparing(polygon -> polygon.getMaxY())).getMaxX();
 	}
-	private float getMinX()
+	public float getMinX()
 	{
-		return Collections.min(this.points, Comparator.comparing(point -> point.getY())).getX();
+		return Collections.max(new ArrayList<Polygon>(Arrays.asList(this.polygons)), Comparator.comparing(polygon -> polygon.getMaxY())).getMinX();
 	}
 
-	private float getMaxY()
+	public float getMaxY()
 	{
-		return Collections.max(this.points, Comparator.comparing(point -> point.getY())).getY();
+		return Collections.max(new ArrayList<Polygon>(Arrays.asList(this.polygons)), Comparator.comparing(polygon -> polygon.getMaxY())).getMaxY();
 	}
-	private float getMinY()
+	public float getMinY()
 	{
-		return Collections.min(this.points, Comparator.comparing(point -> point.getY())).getY();
+		return Collections.max(new ArrayList<Polygon>(Arrays.asList(this.polygons)), Comparator.comparing(polygon -> polygon.getMaxY())).getMinY();
 	}
 
-	private float getMaxZ()
+	public float getMaxZ()
 	{
-		return Collections.max(this.points, Comparator.comparing(point -> point.getY())).getZ();
+		return Collections.max(new ArrayList<Polygon>(Arrays.asList(this.polygons)), Comparator.comparing(polygon -> polygon.getMaxY())).getMaxZ();
 	}
-	private float getMinZ()
+	public float getMinZ()
 	{
-		return Collections.min(this.points, Comparator.comparing(point -> point.getY())).getZ();
+		return Collections.max(new ArrayList<Polygon>(Arrays.asList(this.polygons)), Comparator.comparing(polygon -> polygon.getMaxY())).getMinZ();
 	}
 }

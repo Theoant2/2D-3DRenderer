@@ -1,6 +1,6 @@
 package me.threedengine.engine;
 
-import java.util.stream.IntStream;
+import java.awt.Color;
 
 import me.threedengine.engine.elements.Model;
 import me.threedengine.engine.elements.NoisedLandscape;
@@ -32,6 +32,18 @@ public class Main {
 		wc.on(WindowContainer.RENDER_EVENT, renderer -> {
 			renderer.clear();
 			renderer3D.render();
+			renderer3D.connect();
+			//renderer.fill(Color.GREEN);
+			//model.draw();
+			/*wc.getRenderer().fill(Color.GREEN);
+			wc.getRenderer().filledPolygon(new float[][] {
+				{100f, 50f},
+				{120f, 30f},
+				{140f, 30f},
+				{160f, 50f},
+				{160f, 80f},
+				{150f, 70f}
+			});*/
 			//renderer3D.rotate(0f, 0.01f, 0f);
 			//renderer3D.translate(0f, 0f, 0f);
 			//renderer3D.getCamera().translate(0f, 0f, 0f);

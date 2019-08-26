@@ -24,6 +24,15 @@ public class Vector3D {
 		this.z += vector.getZ();
 	}
 	
+	public Vector3D crossProduct(Vector3D other)
+	{
+		float c_x = this.y * other.y - this.z * other.y;
+		float c_y = this.z * other.z - this.x * other.z;
+		float c_z = this.x * other.y - this.y * other.x;
+		
+		return new Vector3D(c_x, c_y, c_z);
+	}
+	
 	public float getX() {
 		return x;
 	}
